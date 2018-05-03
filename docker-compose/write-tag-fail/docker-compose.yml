@@ -1,0 +1,34 @@
+version: '2'
+
+services:
+
+  cassandra:
+    image: 'cassandra:3'
+    networks:
+      write_tag_fail:
+        ipv4_address: 172.26.0.10
+    restart: always
+
+  hello:
+    image: 'write-tag-fail/hello-impl:1.0-SNAPSHOT'
+    depends_on:
+      - cassandra
+    environment:
+      SERVICE_BIND_ADDRESS: 172.26.0.20
+      SERVICE_BIND_PORT: 9000
+      AKKA_REMOTING_HOST: 172.26.0.20
+      AKKA_REMOTING_PORT: 2552
+      AKKA_REMOTING_BIND_HOST: ''
+      AKKA_REMOTING_BIND_PORT: ''
+      AKKA_SEED_NODES: ''
+      PLAY_SECRET: 'not very secret'
+      LAGOM_CLUSTER_JOIN_SELF: 'true'
+    networks:
+      write_tag_fail:
+        ipv4_address: 172.26.0.20
+
+networks:
+  write_tag_fail:
+    ipam:
+      config:
+        - subnet: 172.26.0.0/24

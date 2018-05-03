@@ -1,11 +1,8 @@
 package com.example.hello.impl
 
-import com.example.hello.api
-import com.example.hello.api.{HelloService}
+import com.example.hello.api.HelloService
 import com.lightbend.lagom.scaladsl.api.ServiceCall
-import com.lightbend.lagom.scaladsl.api.broker.Topic
-import com.lightbend.lagom.scaladsl.broker.TopicProducer
-import com.lightbend.lagom.scaladsl.persistence.{EventStreamElement, PersistentEntityRegistry}
+import com.lightbend.lagom.scaladsl.persistence.PersistentEntityRegistry
 
 /**
   * Implementation of the HelloService.
@@ -26,19 +23,5 @@ class HelloServiceImpl(persistentEntityRegistry: PersistentEntityRegistry) exten
 
     // Tell the entity to use the greeting message specified.
     ref.ask(UseGreetingMessage(request.message))
-  }
-
-
-  override def greetingsTopic(): Topic[api.GreetingMessageChanged] =
-    TopicProducer.singleStreamWithOffset {
-      fromOffset =>
-        persistentEntityRegistry.eventStream(HelloEvent.Tag, fromOffset)
-          .map(ev => (convertEvent(ev), ev.offset))
-    }
-
-  private def convertEvent(helloEvent: EventStreamElement[HelloEvent]): api.GreetingMessageChanged = {
-    helloEvent.event match {
-      case GreetingMessageChanged(msg) => api.GreetingMessageChanged(helloEvent.entityId, msg)
-    }
   }
 }
