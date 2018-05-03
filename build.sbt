@@ -8,7 +8,7 @@ val macwire = "com.softwaremill.macwire" %% "macros" % "2.3.0" % "provided"
 val scalaTest = "org.scalatest" %% "scalatest" % "3.0.4" % Test
 
 lazy val `hello` = (project in file("."))
-  .aggregate(`hello-api`, `hello-impl`, `hello-stream-api`, `hello-stream-impl`)
+  .aggregate(`hello-api`, `hello-impl`)
 
 lazy val `hello-api` = (project in file("hello-api"))
   .settings(
@@ -30,21 +30,3 @@ lazy val `hello-impl` = (project in file("hello-impl"))
   )
   .settings(lagomForkedTestSettings: _*)
   .dependsOn(`hello-api`)
-
-lazy val `hello-stream-api` = (project in file("hello-stream-api"))
-  .settings(
-    libraryDependencies ++= Seq(
-      lagomScaladslApi
-    )
-  )
-
-lazy val `hello-stream-impl` = (project in file("hello-stream-impl"))
-  .enablePlugins(LagomScala)
-  .settings(
-    libraryDependencies ++= Seq(
-      lagomScaladslTestKit,
-      macwire,
-      scalaTest
-    )
-  )
-  .dependsOn(`hello-stream-api`, `hello-api`)
