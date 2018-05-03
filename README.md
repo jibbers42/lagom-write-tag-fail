@@ -1,6 +1,7 @@
 ## TagWriter fails if lagom service started before Cassandra
 
 You'll need to have docker installed for this reproduction
+> note: each section below continues from the previous
 
 #### bring up services
 - clone repository
@@ -42,7 +43,6 @@ You'll need to have docker installed for this reproduction
 - $ `docker-compose stop`
 
 #### bringing up hello first fails
-- order hello, then cas
 - $ `docker-compose start hello`
 - $ `docker-compose logs -f hello`
 - wait for ready
